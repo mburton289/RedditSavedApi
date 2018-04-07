@@ -1,0 +1,34 @@
+import praw
+import os
+import urllib
+from praw.models import Submission
+from StringIO import StringIO
+from PIL import Image
+Ifolder = open('C:\Users\mickey b\Pyfiles\RedditImage', 'w')
+_image_formats = ['bmp', 'dib', 'eps', 'ps', 'gif', 'im', 'jpg', 'jpe', 'jpeg',
+                  'pcd', 'pcx', 'png', 'pbm', 'pgm', 'ppm', 'psd',
+                  'tif', 'tiff', 'xbm', 'xpm', 'rgb', 'rast', 'svg']
+
+r = praw.Reddit(client_id='VNdvfXhYeJE3EA',
+                client_secret='d4rIE0sk2I9wo-NKRxarVkFMCKg',
+                username='User',
+                password='Pass',
+                user_agent='prawtutorial')
+saved = r.user.me().saved(limit=None)
+counter = 0
+
+for item in saved:
+    if isinstance(item, Submission):
+        if item.url.endswith(tuple(_image_formats)) == True:
+            Ifolder.write(item.url)
+            Ifolder.write('\n')
+            try:
+                jj = Image.open(StringIO(urllib.urlopen(item.url).read()))              
+                if str(item.url).endswith(".jpg"):
+                    jj.save('C:\Users\Mickey B\pyfiles\Redditimages\\'+str(counter)+".jpg")
+                    counter += 1
+                if str(item.url).endswith(".png"):
+                    jj.save('C:\Users\Mickey B\pyfiles\Redditimages\\'+str(counter)+".png")
+                    counter += 1
+            except:
+                pass
